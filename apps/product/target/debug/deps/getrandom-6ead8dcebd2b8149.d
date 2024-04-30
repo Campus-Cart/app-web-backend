@@ -1,0 +1,11 @@
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\libgetrandom-6ead8dcebd2b8149.rmeta: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\error.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\util.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\error_impls.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\windows.rs
+
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\libgetrandom-6ead8dcebd2b8149.rlib: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\error.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\util.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\error_impls.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\windows.rs
+
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\getrandom-6ead8dcebd2b8149.d: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\error.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\util.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\error_impls.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\windows.rs
+
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\lib.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\error.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\util.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\error_impls.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\getrandom-0.2.14\src\windows.rs:

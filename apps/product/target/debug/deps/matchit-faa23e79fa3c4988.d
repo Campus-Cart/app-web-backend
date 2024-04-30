@@ -1,0 +1,11 @@
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\libmatchit-faa23e79fa3c4988.rmeta: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\error.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\params.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\router.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\tree.rs
+
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\libmatchit-faa23e79fa3c4988.rlib: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\error.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\params.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\router.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\tree.rs
+
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\matchit-faa23e79fa3c4988.d: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\error.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\params.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\router.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\tree.rs
+
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\lib.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\error.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\params.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\router.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\matchit-0.7.3\src\tree.rs:

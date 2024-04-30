@@ -1,0 +1,51 @@
+{
+    "$schema": "https://turbo.build/schema.json",
+    "pipeline": {
+        "dev": {
+            "cache": false
+        },
+        "app:dev":{
+            "cache": false,
+            "dependsOn": [
+                "app:lib:update",
+                "app:copy:proto"
+            ]
+        },
+        "build": {
+            "dependsOn": [
+                "^build"
+            ],
+            "outputs": [
+                "dist/**"
+            ]
+        },
+        "app:build": {
+            "dependsOn": [
+                "app:lib:update",
+                "app:copy:proto",
+                "^build"
+            ],
+            "outputs": [
+                "dist/**"
+            ]
+        },
+        "app:copy:proto":{
+            "cache": true
+        },
+        "app:lib:update":{
+            "cache": true
+        },
+        "app:preview":{
+            "cache": false
+        },
+        "product:build": {
+            "cache": false,
+            "dependsOn": [
+                "^rust:build"
+            ],
+            "outputs": [
+                "apps/product/target/**"
+            ]
+        }
+    }
+}

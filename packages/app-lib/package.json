@@ -1,0 +1,13 @@
+{
+    "name": "@common/app-lib",
+    "main": "dist/index.js",
+    "types": "src/index.ts",
+    "scripts": {
+        "app:build": "tsc",
+        "app:dev": "tsc",
+        "app:lib:update": "copyfiles -u 2 ../../google/**/* ../../proto/**/*.ts src/types && npm install"
+    },
+    "devDependencies": {
+        "typescript": "latest"
+    }
+}

@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package identity;
+
+import "google/protobuf/timestamp.proto";
+
+// User DTOs
+
+message CreateUserDto {
+    string firstName = 1;
+    string lastName = 2;
+    string email = 3;
+    string phoneNo = 4;
+    string password = 5;
+}
+
+message UpdateUserDto {
+    string id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+    string phoneNo = 5;
+    string password = 6;
+}
+
+message FindOneUserDto {
+    string id = 1;
+}
+
+message FindOneUserByPrimaryEmailAddressDto {
+    string email = 1;
+}
+
+// User Service
+
+service UserService {
+    rpc CreateUser(CreateUserDto) returns (User) {}
+    rpc FindAllUsers(Empty) returns (Users) {}
+    rpc FindOneUser(FindOneUserDto) returns (User) {}
+    rpc UpdateUser(UpdateUserDto) returns (User) {}
+    rpc RemoveUser(FindOneUserDto) returns (Empty) {}
+    rpc FindOneUserByPrimaryEmailAddress(FindOneUserByPrimaryEmailAddressDto) returns (User) {}
+}
+
+// User message
+
+message User {
+    string id = 1; //using uuid, hence string i.e. @PrimaryGeneratedColumn('uuid')
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+    string phoneNo = 5;
+    string password = 6;
+    optional bool isActive = 7;
+    optional string homeAddress = 8;
+    optional google.protobuf.Timestamp dateOfReg = 9;
+    optional bool isEmailVerified = 10;
+    optional string resetPasswordToken = 11;
+    optional google.protobuf.Timestamp resetPasswordExpiration = 12;
+    optional string primaryEmailVerificationToken = 13;
+    optional google.protobuf.Timestamp emailVerificationTokenExpiration = 14;
+    optional string refreshTokenHash = 15;
+}
+
+// UserList message
+
+message Users {
+    repeated User users = 1;
+}
+
+// Empty message
+message Empty {}
+
+

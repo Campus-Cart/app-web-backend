@@ -1,0 +1,1 @@
+{"rustc":17891378215648681530,"features":"","declared_features":"","target":0,"profile":0,"path":0,"deps":[[1118845149514161010,"build_script_build",false,2797745124279233462]],"local":[{"RerunIfChanged":{"output":"debug\\build\\product-c391fcf9a701325e\\output","paths":["proto/product.proto","proto"]}}],"rustflags":[],"metadata":0,"config":0,"compile_kind":0}

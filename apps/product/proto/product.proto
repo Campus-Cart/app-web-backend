@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package product;
+
+// import "google/protobuf/timestamp.proto";
+
+message Product {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    float price = 4;
+    repeated string categories = 5;
+    int32 stockQuantity = 6;
+    string merchantId = 7;
+    string imageUrl = 8;
+    string discountId = 9;
+    // optional google.protobuf.Timestamp createdAt = 10;
+    // optional google.protobuf.Timestamp updatedAt = 11;
+    optional int32 pageSize = 12;
+    optional int32 pageNumber = 13;
+}
+
+message CreateProductDto {
+    string name = 1;
+    string description = 2;
+    float price = 3;
+    repeated string categories = 4;
+    int32 stockQuantity = 5;
+    string merchantId = 6;
+    string image_url = 7;
+    string discountId = 8;
+}
+
+message UpdateProductDto {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    float price = 4;
+    repeated string categories = 5;
+    int32 stockQuantity = 6;
+    string merchantId = 7;
+    string image_url = 8;
+    string discountId = 9;
+}
+
+message FilterProductsDto {
+    float minPrice = 1;
+    float maxPrice = 2;
+    repeated string categories = 3;
+    string merchantId = 4;
+    int32 pageSize = 5;
+    int32 pageNumber = 6;
+}
+
+message FindOneProductDto {
+    string id = 1;
+}
+
+message CreateCategoryDto {
+    string id = 1;
+    string name = 2;
+    string productId = 3;
+}
+
+message Category {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    repeated Product products = 4;
+    // optional google.protobuf.Timestamp createdAt = 5;
+    // optional google.protobuf.Timestamp updatedAt = 6;
+}
+
+service ProductService {
+    rpc CreateProduct(CreateProductDto) returns (Product) {}
+    rpc FindAllProducts(Empty) returns (Products) {}
+    // rpc FindManyProducts(FilterProductsDto) returns (Products) {}
+    rpc FindOneProduct(FindOneProductDto) returns (Product) {}
+    rpc RemoveProduct(FindOneProductDto) returns (Empty) {}
+    rpc UpdateProduct(UpdateProductDto) returns (Product) {}
+    // rpc AddCategoryByProduct(CreateCategoryDto) returns (Empty) {}
+}
+
+message Products {
+    repeated Product products = 1;
+}
+
+message Empty {}

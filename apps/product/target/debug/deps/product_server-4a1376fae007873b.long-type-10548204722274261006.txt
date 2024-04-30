@@ -1,0 +1,1 @@
+impl std::future::Future<Output = Result<<{async block@pool::inner::PoolInner<Postgres>::acquire::{closure#0}::{closure#0}} as std::future::Future>::Output, TimeoutError>>

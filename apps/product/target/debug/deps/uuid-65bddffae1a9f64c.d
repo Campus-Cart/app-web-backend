@@ -1,0 +1,12 @@
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\libuuid-65bddffae1a9f64c.rmeta: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\builder.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\error.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\parser.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\fmt.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\timestamp.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\external.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\macros.rs
+
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\uuid-65bddffae1a9f64c.d: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\builder.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\error.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\parser.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\fmt.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\timestamp.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\external.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\macros.rs
+
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\lib.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\builder.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\error.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\parser.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\fmt.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\timestamp.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\external.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.8.0\src\macros.rs:

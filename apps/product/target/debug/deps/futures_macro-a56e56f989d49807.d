@@ -1,0 +1,9 @@
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\futures_macro-a56e56f989d49807.dll: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\executor.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\join.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\select.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\stream_select.rs
+
+C:\Users\Sophix\OneDrive\Desktop\app-web-backend\apps\product\target\debug\deps\futures_macro-a56e56f989d49807.d: C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\lib.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\executor.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\join.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\select.rs C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\stream_select.rs
+
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\lib.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\executor.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\join.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\select.rs:
+C:\Users\Sophix\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-macro-0.3.30\src\stream_select.rs:
