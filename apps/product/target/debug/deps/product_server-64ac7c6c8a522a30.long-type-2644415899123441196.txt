@@ -1,1 +1,0 @@
-impl std::future::Future<Output = Result<pool::connection::Floating<Postgres, pool::connection::Live<Postgres>>, pool::inner::DecrementSizeGuard<Postgres>>>
