@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Copy the local @common/app-lib package into the Docker image
-COPY ../../packages/app-lib /packages/app-lib
+COPY ../../../../packages/app-lib /packages/app-lib
 
 # Update package.json to reference the local @common/app-lib package correctly
 RUN sed -i 's|"@common/app-lib": "file:../../../../packages/app-lib"|"@common/app-lib": "file:./packages/app-lib"|' package.json
