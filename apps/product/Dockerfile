@@ -39,7 +39,7 @@ WORKDIR ${APP}
 ENTRYPOINT ["./product_server"]
 
 # Specify the port binding for Render
-CMD ["./product_server", "--port", "8080"]
+CMD ["--port", "8080"]
 
 
 
