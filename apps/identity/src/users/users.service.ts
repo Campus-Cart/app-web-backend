@@ -1,12 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
   CreateUserDto,
   UpdateUserDto,
-  User as UserProp
+  User as UserProp,
 } from '@common/app-lib';
 import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
@@ -19,11 +23,11 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserProp> {
-    console.log(createUserDto)
+    console.log(createUserDto);
     try {
       const user = await this.findOneUserByPrimaryEmailAddress(
-        createUserDto.email
-      )
+        createUserDto.email,
+      );
 
       if (user) {
         throw new ConflictException('User with this email already exists');
@@ -35,12 +39,18 @@ export class UsersService {
         ...createUserDto,
         isEmailVerified: false,
         password: hashedPassword,
-      }
+      };
 
       const newUser = this.usersRepository.create(userProps);
-      return this.usersRepository.save(newUser)
+      const savedUser = await this.usersRepository.save(newUser);
+
+      if (!savedUser) {
+        throw new Error('Failed to save new user');
+      }
+
+      return savedUser;
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   }
 
@@ -51,8 +61,8 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     // return this.users.find((user) => user.id === id);
     const user = await this.usersRepository.findOne({
-      where: { id }
-    })
+      where: { id },
+    });
 
     if (!user) {
       throw new NotFoundException(`User with ID: ${id} not found`);
@@ -62,7 +72,7 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.usersRepository.findOneBy({id: id});
+    const user = await this.usersRepository.findOneBy({ id: id });
 
     if (!user) {
       throw new NotFoundException(`User with ID: ${id} not found`);
@@ -83,7 +93,7 @@ export class UsersService {
     }
 
     await this.usersRepository.save(user);
-    return user
+    return user;
   }
 
   async remove(id: string): Promise<UserProp> {
@@ -107,6 +117,6 @@ export class UsersService {
   }
 
   findOneUserByPrimaryEmailAddress(email: string) {
-    return this.usersRepository.findOneBy({ email })
+    return this.usersRepository.findOneBy({ email });
   }
 }
