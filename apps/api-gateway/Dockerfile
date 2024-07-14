@@ -14,6 +14,8 @@ COPY tsconfig.json ./
 RUN npm install
 # Build the application
 RUN npm run app:build
+
+RUN ls -alh /usr/src/app
 # Stage 2: Create the final image
 FROM node:16
 # Set the working directory
