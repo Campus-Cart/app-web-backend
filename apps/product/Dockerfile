@@ -1,7 +1,7 @@
 # Use the official Rust image as a builder stage
 FROM rust:latest as builder
 
-# Update CA certificates
+# Update CA certificates and install protoc
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     protobuf-compiler \
@@ -15,10 +15,10 @@ WORKDIR /product_microservice
 COPY . .
 
 # Install dependencies and build for release
-RUN cargo build --release --bin product-server
+RUN cargo install --path .
 
 # Debugging step to list target directory contents
-RUN ls -alh /product_microservice/target/release/
+RUN ls -alh /usr/local/cargo/bin/
 
 # The final stage
 # Use Ubuntu as a base with a compatible GLIBC version
@@ -32,10 +32,12 @@ ENV DATABASE_URL="postgresql://campuscart_1rbr_user:F7ohuceMztItYwLKaczgHqgpQXhL
 EXPOSE 8080
 
 # Copy the compiled binary from the builder stage to the production image
-COPY --from=builder /product_microservice/target/release/product-server ${APP}/product_microservice
+COPY --from=builder /usr/local/cargo/bin/product-server ${APP}/product_server
+COPY --from=builder /usr/local/cargo/bin/product-client ${APP}/product_client
 
 WORKDIR ${APP}
-ENTRYPOINT ["./product_microservice"]
+ENTRYPOINT ["./product_server"]
+
 
 
 
