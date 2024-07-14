@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+
+  postgres:
+      image: postgres:latest
+      restart: always
+      environment:
+        POSTGRES_DB: campuscart_1rbr
+        POSTGRES_USER: campuscart_1rbr_user
+        POSTGRES_PASSWORD: F7ohuceMztItYwLKaczgHqgpQXhLRYIN
+        DATABASE_URL: postgresql://campuscart_1rbr_user:F7ohuceMztItYwLKaczgHqgpQXhLRYIN@dpg-cq5820g8fa8c7382tf90-a.oregon-postgres.render.com/campuscart_1rbr
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+        
+  product_service:
+    image: solexi/product-service
+    build:
+      context: .
+      dockerfile: /apps/product/Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://campuscart_1rbr_user:F7ohuceMztItYwLKaczgHqgpQXhLRYIN@dpg-cq5820g8fa8c7382tf90-a.oregon-postgres.render.com/campuscart_1rbr
+      - POSTGRES_PASSWORD=F7ohuceMztItYwLKaczgHqgpQXhLRYIN
+      - POSTGRES_HOST=dpg-cq5820g8fa8c7382tf90-a.oregon-postgres.render.com
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  identity_service:
+    image: solexi/identity-service
+    build:
+      context: .
+      dockerfile: ./apps/identity/Dockerfile
+    environment:
+      - POSTGRES_HOST=dpg-cq5820g8fa8c7382tf90-a.oregon-postgres.render.com
+      - POSTGRES_USER=campuscart_1rbr_user
+      - POSTGRES_PASSWORD=F7ohuceMztItYwLKaczgHqgpQXhLRYIN
+      - POSTGRES_DB=campuscart_1rbr
+      - POSTGRES_URL=postgresql://campuscart_1rbr_user:F7ohuceMztItYwLKaczgHqgpQXhLRYIN@dpg-cq5820g8fa8c7382tf90-a.oregon-postgres.render.com/campuscart_1rbr
+      - JWT_SECRET=fffe5ce491e904e079d291e4ce9a17aca7f7466c097f13744a325153c60b72e08b1fe74d814752cb122dda474d2f193181ee342d86a3f4e9ec87b8c82c33384b
+      - APP_NAME=CampusCart
+      - APP_VERSION=1.0.0
+      - APP_DESCRIPTION=E-commerce app for students in university
+      - APP_SERVER_LISTEN_PORT=3000
+      - PAYSTACK_SECRET_KEY=sk_test_03fca4f6911ae990fc8805f47df4ed25b35b1cd3
+      - PAYSTACK_PUBLIC_KEY=pk_test_432f11adbc2f26113bf6297d0a06779900468bfe
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+  api_gateway:
+    image: solexi/api-gateway
+    build:
+      context: .
+      dockerfile: ./apps/api-gateway/Dockerfile
+    environment:
+      - POSTGRES_HOST=dpg-cq5820g8fa8c7382tf90-a.oregon-postgres.render.com
+      - POSTGRES_USER=campuscart_1rbr_user
+      - POSTGRES_PASSWORD=F7ohuceMztItYwLKaczgHqgpQXhLRYIN
+      - POSTGRES_DB=campuscart_1rbr
+      - POSTGRES_URL=postgresql://campuscart_1rbr_user:F7ohuceMztItYwLKaczgHqgpQXhLRYIN@dpg-cq5820g8fa8c7382tf90-a.oregon-postgres.render.com/campuscart_1rbr
+      - JWT_SECRET=fffe5ce491e904e079d291e4ce9a17aca7f7466c097f13744a325153c60b72e08b1fe74d814752cb122dda474d2f193181ee342d86a3f4e9ec87b8c82c33384b
+      - APP_NAME=CampusCart
+      - APP_VERSION=1.0.0
+      - APP_DESCRIPTION=E-commerce app for students in university
+      - APP_SERVER_LISTEN_PORT=3000
+      - PAYSTACK_SECRET_KEY=sk_test_03fca4f6911ae990fc8805f47df4ed25b35b1cd3
+      - PAYSTACK_PUBLIC_KEY=pk_test_432f11adbc2f26113bf6297d0a06779900468bfe
+    depends_on:
+      - identity_service
+      - product_service
+      - postgres
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:

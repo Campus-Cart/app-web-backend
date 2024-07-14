@@ -37,15 +37,6 @@
         },
         "app:preview":{
             "cache": false
-        },
-        "product:build": {
-            "cache": false,
-            "dependsOn": [
-                "^rust:build"
-            ],
-            "outputs": [
-                "apps/product/target/**"
-            ]
         }
     }
 }
