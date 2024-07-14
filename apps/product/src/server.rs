@@ -1,23 +1,32 @@
 #![allow(unused)]
 
-use chrono::{DateTime, TimeZone, Utc};
+use chrono::{ DateTime, TimeZone, Utc };
 use clap::Parser;
 use dotenv::dotenv;
 use lazy_static::lazy_static;
-use product::product_service_server::{ProductService, ProductServiceServer};
+use product::product_service_server::{ ProductService, ProductServiceServer };
 use product::{
-    CreateCategoryDto, CreateProductDto, Empty, FilterProductsDto, FindOneProductDto,
-    Product as PRODUCT, Products, UpdateProductDto,
+    CreateCategoryDto,
+    CreateProductDto,
+    Empty,
+    FilterProductsDto,
+    FindOneProductDto,
+    PaginationDto,
+    Product as PRODUCT,
+    Products,
+    SearchProductsRequest,
+    SearchProductsResponse,
+    UpdateProductDto,
 };
 use prost_types::Timestamp;
-use sqlx::postgres::{PgDatabaseError, PgPoolOptions, PgRow};
-use sqlx::{Executor, FromRow};
+use sqlx::postgres::{ PgDatabaseError, PgPoolOptions, PgRow };
+use sqlx::{ query, Executor, FromRow };
 use sqlx::Row;
 use std::env;
 use std::fmt::format;
 use std::net::AddrParseError;
 use std::time::SystemTime;
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{ transport::Server, Request, Response, Status };
 use uuid::Uuid;
 
 fn timestamp_to_datetime(t: prost_types::Timestamp) -> DateTime<Utc> {
@@ -47,7 +56,7 @@ lazy_static! {
 impl ProductService for Product {
     async fn create_product(
         &self,
-        request: Request<CreateProductDto>,
+        request: Request<CreateProductDto>
     ) -> Result<Response<PRODUCT>, Status> {
         let req = request.into_inner();
 
@@ -74,7 +83,8 @@ impl ProductService for Product {
 
         let timestamp = timestamp_to_datetime(timestamp);
 
-        let row = sqlx::query(
+        let row = sqlx
+            ::query(
                 r#"
                 INSERT INTO product (id, name, description, price, categories, stock_quantity, merchant_id, image_url, discount_id)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -92,8 +102,7 @@ impl ProductService for Product {
             .bind(&req.discount_id)
             // .bind(&timestamp)
             // .bind(&timestamp)
-            .execute(&self.pool)
-            .await;
+            .execute(&self.pool).await;
 
         match row {
             Ok(_) => {
@@ -121,7 +130,7 @@ impl ProductService for Product {
 
     async fn update_product(
         &self,
-        request: Request<UpdateProductDto>,
+        request: Request<UpdateProductDto>
     ) -> Result<Response<PRODUCT>, Status> {
         let req = request.into_inner();
 
@@ -144,7 +153,8 @@ impl ProductService for Product {
 
         let timestamp = timestamp_to_datetime(timestamp);
 
-        let row = sqlx::query(
+        let row = sqlx
+            ::query(
                 r#"
                 UPDATE product
                 SET name = $2, description = $3, price = $4, categories = $5, stock_quantity = $6, merchant_id = $7, image_url = $8, discount_id = $9
@@ -162,8 +172,7 @@ impl ProductService for Product {
             .bind(&req.image_url)
             .bind(&req.discount_id)
             // .bind(&timestamp)
-            .execute(&self.pool)
-            .await;
+            .execute(&self.pool).await;
 
         match row {
             Ok(_) => {
@@ -189,16 +198,16 @@ impl ProductService for Product {
 
     async fn find_all_products(
         &self,
-        request: Request<Empty>,
+        request: Request<Empty>
     ) -> Result<Response<Products>, Status> {
-        let products = sqlx::query(
+        let products = sqlx
+            ::query(
                 r#"
                 SELECT id, name, description, price, categories, stock_quantity, merchant_id, image_url, discount_id
                 FROM product
                 "#
             )
-            .fetch_all(&self.pool)
-            .await;
+            .fetch_all(&self.pool).await;
         match products {
             Ok(product_rows) => {
                 let products: Vec<PRODUCT> = product_rows
@@ -226,11 +235,12 @@ impl ProductService for Product {
 
     async fn find_one_product(
         &self,
-        request: Request<FindOneProductDto>,
+        request: Request<FindOneProductDto>
     ) -> Result<Response<PRODUCT>, Status> {
         let req = request.into_inner();
 
-        let product = sqlx::query(
+        let product = sqlx
+            ::query(
                 r#"
                 SELECT id, name, description, price, categories, stock_quantity, merchant_id, image_url, discount_id
                 FROM product
@@ -238,8 +248,7 @@ impl ProductService for Product {
                 "#
             )
             .bind(&req.id)
-            .fetch_one(&self.pool)
-            .await;
+            .fetch_one(&self.pool).await;
 
         match product {
             Ok(row) => {
@@ -265,20 +274,20 @@ impl ProductService for Product {
 
     async fn remove_product(
         &self,
-        request: Request<FindOneProductDto>,
+        request: Request<FindOneProductDto>
     ) -> Result<Response<Empty>, Status> {
         let req = request.into_inner();
 
-        let result = sqlx::query(
-            r#"
+        let result = sqlx
+            ::query(
+                r#"
             DELETE FROM product
             WHERE id = $1
             RETURNING id
-            "#,
-        )
-        .bind(&req.id)
-        .fetch_optional(&self.pool) // Using fetch_optional in case the id does not exist
-        .await;
+            "#
+            )
+            .bind(&req.id)
+            .fetch_optional(&self.pool).await; // Using fetch_optional in case the id does not exist
 
         match result {
             Ok(Some(row)) => {
@@ -287,16 +296,103 @@ impl ProductService for Product {
             }
             Ok(None) => {
                 // If no row returned, the product did not exist
-                Err(Status::not_found(format!(
-                    "Product with ID {} not found",
-                    req.id
-                )))
+                Err(Status::not_found(format!("Product with ID {} not found", req.id)))
             }
             Err(e) => {
                 // If there was a database error
                 Err(Status::internal(format!("Failed to remove product: {}", e)))
             }
         }
+    }
+
+    async fn get_paginated_products(
+        &self,
+        request: Request<PaginationDto>
+    ) -> Result<Response<Products>, Status> {
+        let req = request.into_inner();
+
+        let products = sqlx
+            ::query(
+                r#"
+                SELECT id, name, description, price, categories, stock_quantity, merchant_id, image_url, discount_id
+                FROM product
+                LIMIT $1 OFFSET $2
+                "#
+            )
+            .bind(req.page_size)
+            .bind(req.page_number)
+            .fetch_all(&self.pool).await;
+
+        match products {
+            Ok(product_rows) => {
+                let products: Vec<PRODUCT> = product_rows
+                    .iter()
+                    .map(|row| PRODUCT {
+                        id: row.try_get("id").unwrap_or_default(),
+                        name: row.try_get("name").unwrap_or_default(),
+                        description: row.try_get("description").unwrap_or_default(),
+                        price: row.try_get("price").unwrap_or_default(),
+                        categories: row.try_get("categories").unwrap_or_default(),
+                        stock_quantity: row.try_get("stock_quantity").unwrap_or_default(),
+                        merchant_id: row.try_get("merchant_id").unwrap_or_default(),
+                        image_url: row.try_get("image_url").unwrap_or_default(),
+                        discount_id: row.try_get("discount_id").unwrap_or_default(),
+                        page_number: Default::default(),
+                        page_size: Default::default(),
+                    })
+                    .collect();
+
+                Ok(Response::new(Products { products }))
+            }
+            Err(e) => Err(Status::internal(format!("Failed to fetch products: {}", e))),
+        }
+    }
+
+    async fn search_products(
+        &self,
+        request: Request<SearchProductsRequest>
+    ) -> Result<Response<SearchProductsResponse>, Status> {
+        let req = request.into_inner();
+
+        let query = format!("%{}%", req.query.clone().unwrap_or_default());
+        let products = sqlx
+            ::query(
+                r#"
+                SELECT id, name, description, price, categories, stock_quantity, merchant_id, image_url, discount_id
+                FROM product
+                WHERE name ILIKE $1
+                LIMIT $2 OFFSET $3
+                "#
+            )
+            .bind(&req.query)
+            .bind(req.page_size)
+            .bind((req.page_number - 1) * req.page_size)
+            .fetch_all(&self.pool)
+            .await;
+            // .map_err(|e| Status::internal("Failed to execute query"))?;
+            match products {
+                Ok(product_rows) => {
+                    let products: Vec<PRODUCT> = product_rows
+                        .iter()
+                        .map(|row| PRODUCT {
+                            id: row.try_get("id").unwrap_or_default(),
+                            name: row.try_get("name").unwrap_or_default(),
+                            description: row.try_get("description").unwrap_or_default(),
+                            price: row.try_get("price").unwrap_or_default(),
+                            categories: row.try_get("categories").unwrap_or_default(),
+                            stock_quantity: row.try_get("stock_quantity").unwrap_or_default(),
+                            merchant_id: row.try_get("merchant_id").unwrap_or_default(),
+                            image_url: row.try_get("image_url").unwrap_or_default(),
+                            discount_id: row.try_get("discount_id").unwrap_or_default(),
+                            page_number: Default::default(),
+                            page_size: Default::default(),
+                        })
+                        .collect();
+
+                    Ok(Response::new(SearchProductsResponse { products }))
+                }
+                Err(e) => Err(Status::internal(format!("Failed to fetch products: {}", e))),
+            }
     }
 }
 
@@ -321,13 +417,13 @@ async fn main() -> Result<(), sqlx::Error> {
     // Create a connection pool
     let pool = PgPoolOptions::new()
         .max_connections(5)
-        .connect(&DB_URL)
-        .await
+        .connect(&DB_URL).await
         .expect("Failed to create pool");
 
     // Create table if not exist yet
-    sqlx::query(
-        r#"
+    sqlx
+        ::query(
+            r#"
         CREATE TABLE IF NOT EXISTS product (
             id VARCHAR PRIMARY KEY,
             name VARCHAR NOT NULL,
@@ -339,22 +435,21 @@ async fn main() -> Result<(), sqlx::Error> {
             image_url VARCHAR NOT NULL,
             discount_id VARCHAR NOT NULL
         );
-        "#,
-    )
-    .execute(&pool)
-    .await?;
-    sqlx::query(
-        r#"
+        "#
+        )
+        .execute(&pool).await?;
+    sqlx
+        ::query(
+            r#"
         CREATE TABLE IF NOT EXISTS category (
             id VARCHAR PRIMARY KEY,
             name VARCHAR NOT NULL,
             description VARCHAR NOT NULL,
             products JSONB[]
         )
-        "#,
-    )
-    .execute(&pool)
-    .await?;
+        "#
+        )
+        .execute(&pool).await?;
 
     // Start the server
     let cli = ServerCli::parse();
@@ -363,20 +458,21 @@ async fn main() -> Result<(), sqlx::Error> {
     let addr = match addr {
         Ok(addr) => addr,
         Err(err) => {
-            return Err(sqlx::Error::Io(std::io::Error::new(
-                std::io::ErrorKind::InvalidInput,
-                format!("Failed to parse address: {}", err),
-            )))
+            return Err(
+                sqlx::Error::Io(
+                    std::io::Error::new(
+                        std::io::ErrorKind::InvalidInput,
+                        format!("Failed to parse address: {}", err)
+                    )
+                )
+            );
         }
     };
     let product_service = Product::new(pool).await;
 
     println!("Server listening on {}", addr);
 
-    Server::builder()
-        .add_service(ProductServiceServer::new(product_service))
-        .serve(addr)
-        .await;
+    Server::builder().add_service(ProductServiceServer::new(product_service)).serve(addr).await;
 
     Ok(())
 }

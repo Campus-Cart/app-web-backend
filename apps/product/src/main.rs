@@ -3,11 +3,12 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, ResponseError};
 use clap::Parser;
 use env_logger::Env;
 use product::product_service_client::ProductServiceClient;
-use product::{CreateProductDto, Product, UpdateProductDto, Empty};
+use product::{CreateProductDto, Product, UpdateProductDto, Empty, SearchProductsResponse, SearchProductsRequest};
 use serde::{Deserialize, Serialize};
 use std::env;
 use tonic::Request;
 use tonic::{client, transport::Channel};
+use actix_cors::Cors;
 
 pub mod product {
     tonic::include_proto!("product");
@@ -104,33 +105,27 @@ async fn remove_product(
     }
 }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    env::set_var("RUST_LOG", "debug");
-    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
-    // Connect to the serve
-    let cli = ClientCli::parse();
-
-    let client =
-        ProductServiceClient::connect(format!("http://{}:{}", cli.server, cli.port)).await?;
-
-    let server = HttpServer::new(move || {
-        let client_data = web::Data::new(client.clone());
-
-        App::new()
-            .app_data(client_data)
-            .route("/product", web::post().to(handle_create_product))
-            .route("/product/{id}", web::patch().to(handle_update_product))
-            .route("/product", web::get().to(handle_find_all_products))
-            .route("/product/{id}", web::get().to(handle_find_one_product))
-            .route("/product/{id}", web::delete().to(handle_remove_product))
-    })
-    .bind("127.0.0.1:8082")?
-    .run()
-    .await?;
-    Ok(())
+async fn get_paginated_products(
+    client: &mut ProductServiceClient<Channel>,
+    page_number: i32,
+    page_size: i32,
+) -> Result<Vec<Product>, tonic::Status> {
+    let request = Request::new(product::PaginationDto { page_number, page_size });
+    let response = client.get_paginated_products(request).await?;
+    Ok(response.into_inner().products)
 }
 
+async fn search_products(
+    client: &mut ProductServiceClient<Channel>,
+    query: SearchProductsRequest,
+) -> Result<SearchProductsResponse, tonic::Status> {
+    let request = Request::new(query);
+    let response = client.search_products(request).await?;
+    Ok(response.into_inner())
+}
+
+
+// Functions to handle the service functions
 async fn handle_create_product(
     dto: web::Json<CreateProductDto>,
     client: web::Data<ProductServiceClient<Channel>>,
@@ -189,4 +184,63 @@ async fn handle_remove_product(
         Ok(response) => Ok(HttpResponse::Ok().json(response)),
         Err(_) => Err(MyError::InternalServerError("Failed to delete product".to_string(),)),
     }
+}
+
+async fn handle_get_paginated(
+    page_number: web::Path<i32>,
+    page_size: web::Path<i32>,
+    client: web::Data<ProductServiceClient<Channel>>,
+) -> impl Responder {
+    match get_paginated_products(&mut client.get_ref().clone(), page_number.into_inner(), page_size.into_inner()).await {
+        Ok(response) => Ok(HttpResponse::Ok().json(response)),
+        Err(_) => Err(MyError::InternalServerError("Failed to get paginated products".to_string(),)),
+    }
+}
+
+async fn handle_search_products(
+    query: web::Query<SearchProductsRequest>,
+    client: web::Data<ProductServiceClient<Channel>>,
+) -> impl Responder {
+    match search_products(&mut client.get_ref().clone(), query.into_inner()).await {
+        Ok(response) => Ok(HttpResponse::Ok().json(response)),
+        Err(_) => Err(MyError::InternalServerError("Failed to search products".to_string())),
+    }
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    env::set_var("RUST_LOG", "debug");
+    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+    // Connect to the serve
+    let cli = ClientCli::parse();
+
+    let client =
+        ProductServiceClient::connect(format!("http://{}:{}", cli.server, cli.port)).await?;
+
+    let server = HttpServer::new(move || {
+        let client_data = web::Data::new(client.clone());
+
+        let cors = Cors::permissive();
+
+        App::new()
+            .wrap(cors)
+            .app_data(client_data)
+            .service(
+                web::resource("/search")
+                .route(web::get().to(handle_search_products))
+                // web::scope("/product")
+                //     .route("/search", web::get().to(handle_search_products))
+                //     .route("/search/{page_number}/{page_size}", web::get().to(handle_get_paginated)),
+            )
+            .route("/product", web::post().to(handle_create_product))
+            .route("/product/{id}", web::patch().to(handle_update_product))
+            .route("/product", web::get().to(handle_find_all_products))
+            .route("/product/{id}", web::get().to(handle_find_one_product))
+            .route("/product/{id}", web::delete().to(handle_remove_product))
+            .route("/product/{page_number}/{page_size}", web::get().to(handle_get_paginated))
+    })
+    .bind("127.0.0.1:8082")?
+    .run()
+    .await?;
+    Ok(())
 }

@@ -632,3 +632,28 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 //     }
 //     Err(e) => Err(Status::internal(format!("Failed to fetch products: {}", e))),
 // }
+
+// let server = HttpServer::new(move || {
+//     let client_data = web::Data::new(client.clone());
+
+//     let cors = Cors::builder()
+//         .allowed_origin("http://example.com")
+//         .allowed_methods(vec!["GET", "POST"])
+//         .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+//         .allowed_header(http::header::CONTENT_TYPE)
+//         .max_age(3600)
+//         .finish();
+
+//     App::new()
+//         .wrap(cors)
+//         .app_data(client_data)
+//         .route("/product", web::post().to(handle_create_product))
+//         .route("/product/{id}", web::patch().to(handle_update_product))
+//         .route("/product", web::get().to(handle_find_all_products))
+//         .route("/product/{id}", web::get().to(handle_find_one_product))
+//         .route("/product/{id}", web::delete().to(handle_remove_product))
+//         .route("/product/{page_number}/{page_size}", web::get().to(handle_get_paginated))
+// })
+// .bind("127.0.0.1:8082")?
+// .run()
+// .await?;
