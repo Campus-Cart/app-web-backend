@@ -400,7 +400,7 @@ impl ProductService for Product {
 #[command(author, version)]
 #[command(about = "product-server - the product microservice", long_about = None)]
 struct ServerCli {
-    #[arg(short = 's', long = "server", default_value = "127.0.0.1")]
+    #[arg(short = 's', long = "server", default_value = "0.0.0.0")]
     server: String,
     #[arg(short = 'p', long = "port", default_value = "50052")]
     port: u16,
