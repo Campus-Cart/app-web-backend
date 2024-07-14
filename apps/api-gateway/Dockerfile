@@ -21,7 +21,8 @@ WORKDIR /usr/src/app
 
 RUN ls -alh /usr/src/app
 # Copy the built application from the previous stage
-COPY --from=build-env /build/apps/api-gateway .
+# COPY --from=build-env /build/apps/api-gateway .
+COPY --from=build-env /build/apps/api-gateway/dist ./dist
 # Expose the port the app runs on
 EXPOSE 3000
 # Command to run the application
