@@ -38,6 +38,9 @@ COPY --from=builder /usr/local/cargo/bin/product-client ${APP}/product_client
 WORKDIR ${APP}
 ENTRYPOINT ["./product_server"]
 
+# Specify the port binding for Render
+CMD ["./product_server", "--port", "8080"]
+
 
 
 
