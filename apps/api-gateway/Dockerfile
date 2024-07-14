@@ -14,12 +14,12 @@ COPY tsconfig.json ./
 RUN npm install
 # Build the application
 RUN npm run app:build
-
-RUN ls -alh /usr/src/app
 # Stage 2: Create the final image
 FROM node:16
 # Set the working directory
 WORKDIR /usr/src/app
+
+RUN ls -alh /usr/src/app
 # Copy the built application from the previous stage
 COPY --from=build-env /build/apps/api-gateway .
 # Expose the port the app runs on
