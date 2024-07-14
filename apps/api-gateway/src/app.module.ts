@@ -6,7 +6,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
-import { ProductModule } from './product/product.module';
+import { OrderModule } from './order/order.module';
+import { MerchantModule } from './merchant/merchant.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { PaymentsModule } from './payments/payments.module';
+import { PaystackModule } from './paystack/paystack.module';
+import { HttpModule } from '@nestjs/axios';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -31,7 +36,12 @@ require('dotenv').config();
       },
     }),
     CartModule,
-    ProductModule
+    OrderModule,
+    MerchantModule,
+    ReviewsModule,
+    PaymentsModule,
+    PaystackModule,
+    HttpModule
   ],
   controllers: [AppController],
   providers: [AppService],
