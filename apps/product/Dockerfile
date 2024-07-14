@@ -17,6 +17,9 @@ COPY . .
 # Install dependencies and build for release
 RUN cargo install --path .
 
+# Debugging step to list target directory contents
+RUN ls -alh /usr/local/cargo/bin/
+
 # The final stage
 # Use Ubuntu as a base with a compatible GLIBC version
 FROM ubuntu:latest
