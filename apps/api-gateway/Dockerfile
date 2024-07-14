@@ -7,6 +7,9 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json (if available) to the working directory
 COPY package*.json ./
 
+# Debugging step to list the contents of the directory
+RUN ls -alh ../../packages/
+
 # Copy the local @common/app-lib package into the Docker image
 COPY ../../packages/app-lib /packages/app-lib
 
