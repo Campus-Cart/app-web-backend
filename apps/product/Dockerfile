@@ -29,7 +29,7 @@ ENV DATABASE_URL="postgresql://campuscart_1rbr_user:F7ohuceMztItYwLKaczgHqgpQXhL
 EXPOSE 8080
 
 # Copy the compiled binary from the builder stage to the production image
-COPY --from=builder /usr/local/cargo/bin/product_microservice/target/release/product_microservice ${APP}/product_microservice
+COPY --from=builder /usr/local/cargo/bin/product_microservice ${APP}/product_microservice
 
 WORKDIR ${APP}
 ENTRYPOINT ["./product_microservice"]
