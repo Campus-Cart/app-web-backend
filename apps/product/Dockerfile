@@ -2,7 +2,10 @@
 FROM rust:latest as builder
 
 # Update CA certificates
-RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    protobuf-compiler \
+    && update-ca-certificates
 
 # Create a new empty shell project
 RUN USER=root cargo new --bin product_microservice
