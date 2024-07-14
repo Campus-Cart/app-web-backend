@@ -18,7 +18,7 @@ pub mod product {
 #[command(author, version)]
 #[command(about = "Product ", long_about = None)]
 struct ClientCli {
-    #[arg(short = 's', long = "server", default_value = "127.0.0.1")]
+    #[arg(short = 's', long = "server", default_value = "0.0.0.0")]
     server: String,
     #[arg(short = 'p', long = "port", default_value = "50052")]
     port: u16,
@@ -239,7 +239,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .route("/product/{id}", web::delete().to(handle_remove_product))
             .route("/product/{page_number}/{page_size}", web::get().to(handle_get_paginated))
     })
-    .bind("127.0.0.1:8082")?
+    .bind("0.0.0.0:8082")?
     .run()
     .await?;
     Ok(())

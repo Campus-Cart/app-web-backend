@@ -1,36 +1,27 @@
 # Stage 1: Prepare the build environment
 FROM node:16 as build-env
-
 # Set the working directory
 WORKDIR /build
-
 # Copy the entire project into the build environment
 COPY ../../ /build
-
 # Set the working directory to the api-gateway directory
 WORKDIR /build/apps/api-gateway
-
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
-
+# Copy tsconfig.json to the working directory
+COPY tsconfig.json ./
 # Install dependencies
 RUN npm install
-
 # Build the application
 RUN npm run app:build
-
 # Stage 2: Create the final image
 FROM node:16
-
 # Set the working directory
 WORKDIR /usr/src/app
-
 # Copy the built application from the previous stage
 COPY --from=build-env /build/apps/api-gateway .
-
 # Expose the port the app runs on
 EXPOSE 3000
-
 # Command to run the application
 CMD ["npm", "run", "start:prod"]
 
