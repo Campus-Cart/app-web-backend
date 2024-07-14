@@ -400,11 +400,17 @@ impl ProductService for Product {
 #[command(author, version)]
 #[command(about = "product-server - the product microservice", long_about = None)]
 struct ServerCli {
-    #[arg(short = 's', long = "server", default_value = "0.0.0.0")]
+    #[arg(long)]
     server: String,
-    #[arg(short = 'p', long = "port", default_value = "50052")]
+    #[arg(long)]
     port: u16,
 }
+// struct ServerCli {
+//     #[arg(short = 's', long = "server", default_value = "0.0.0.0")]
+//     server: String,
+//     #[arg(short = 'p', long = "port", default_value = "50052")]
+//     port: u16,
+// }
 
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
