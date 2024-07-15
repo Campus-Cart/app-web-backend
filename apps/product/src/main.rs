@@ -25,6 +25,15 @@ pub mod product {
 #[derive(Parser)]
 #[command(author, version)]
 #[command(about = "Product ", long_about = None)]
+
+// struct ClientCli {
+//     #[arg(short = 's', long = "server", default_value = "127.0.0.1")]
+//     server: String,
+//     #[arg(short = 'p', long = "port", default_value = "50052")]
+//     port: u16,
+//     /// The message to send
+//     message: Option<String>,
+// }
 struct ClientCli {
     #[arg(short = 's', long = "server", default_value = "0.0.0.0")]
     server: String,

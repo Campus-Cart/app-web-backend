@@ -71,8 +71,8 @@ services:
       - PAYSTACK_SECRET_KEY=sk_test_03fca4f6911ae990fc8805f47df4ed25b35b1cd3
       - PAYSTACK_PUBLIC_KEY=pk_test_432f11adbc2f26113bf6297d0a06779900468bfe
     depends_on:
-      - identity_service
-      - product_service
+      # - identity_service
+      # - product_service
       - postgres
     ports:
       - "3000:3000"
