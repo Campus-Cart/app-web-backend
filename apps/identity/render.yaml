@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: identity-service
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    runtime: node
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 50051 #
