@@ -14,6 +14,8 @@ COPY tsconfig.json ./
 RUN npm install
 # Build the application
 RUN npm run app:build
+# Debugging step to list the contents of the dist directory
+RUN ls -alh ./dist
 
 # Stage 2: Create the final image
 FROM node:16
