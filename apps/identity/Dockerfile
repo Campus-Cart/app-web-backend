@@ -14,7 +14,7 @@ COPY packages/app-lib /packages/app-lib
 RUN sed -i 's|"@common/app-lib": "file:../../../../packages/app-lib"|"@common/app-lib": "file:./packages/app-lib"|' package.json
 
 # Install dependencies
-RUN npm install
+RUN npm ci --only=production
 
 # Copy the rest of the application code
 COPY . .

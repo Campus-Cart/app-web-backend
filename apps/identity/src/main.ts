@@ -11,7 +11,7 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        url: `localhost:3002`,
+        url: 'localhost:3002',
         package: IDENTITY_PACKAGE_NAME,
         protoPath: join(__dirname, '../../../proto/identity.proto')
       }
