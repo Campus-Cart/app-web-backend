@@ -1,13 +1,21 @@
 #![allow(unused)]
-use actix_web::{web, App, HttpResponse, HttpServer, Responder, ResponseError};
+use actix_web::{ web, App, HttpResponse, HttpServer, Responder, ResponseError };
 use clap::Parser;
 use env_logger::Env;
 use product::product_service_client::ProductServiceClient;
-use product::{CreateProductDto, Product, UpdateProductDto, Empty, SearchProductsResponse, SearchProductsRequest};
-use serde::{Deserialize, Serialize};
+use product::{
+    CreateProductDto,
+    Product,
+    UpdateProductDto,
+    Empty,
+    SearchProductsResponse,
+    SearchProductsRequest,
+};
+use serde::{ Deserialize, Serialize };
 use std::env;
+use std::net::SocketAddr;
 use tonic::Request;
-use tonic::{client, transport::Channel};
+use tonic::{ client, transport::Channel };
 use actix_cors::Cors;
 
 pub mod product {
@@ -24,7 +32,6 @@ struct ClientCli {
     port: u16,
     /// The message to send
     message: Option<String>,
-    // message: String,
 }
 
 #[derive(Debug)]
@@ -60,7 +67,7 @@ impl ResponseError for MyError {
 
 async fn create_product(
     client: &mut ProductServiceClient<Channel>,
-    dto: CreateProductDto,
+    dto: CreateProductDto
 ) -> Result<Product, tonic::Status> {
     let request = Request::new(dto);
     let response = client.create_product(request).await?;
@@ -69,7 +76,7 @@ async fn create_product(
 
 async fn update_product(
     client: &mut ProductServiceClient<Channel>,
-    dto: UpdateProductDto,
+    dto: UpdateProductDto
 ) -> Result<Product, tonic::Status> {
     let request = Request::new(dto);
     let response = client.update_product(request).await?;
@@ -77,7 +84,7 @@ async fn update_product(
 }
 
 async fn find_all_products(
-    client: &mut ProductServiceClient<Channel>,
+    client: &mut ProductServiceClient<Channel>
 ) -> Result<Vec<Product>, tonic::Status> {
     let request = Request::new(product::Empty {});
     let response = client.find_all_products(request).await?;
@@ -86,7 +93,7 @@ async fn find_all_products(
 
 async fn find_one_product(
     client: &mut ProductServiceClient<Channel>,
-    id: String,
+    id: String
 ) -> Result<Product, tonic::Status> {
     let request = Request::new(product::FindOneProductDto { id });
     let response = client.find_one_product(request).await?;
@@ -95,20 +102,20 @@ async fn find_one_product(
 
 async fn remove_product(
     client: &mut ProductServiceClient<Channel>,
-    id: String,
+    id: String
 ) -> Result<Empty, tonic::Status> {
-    let request = Request::new(product::FindOneProductDto{id});
+    let request = Request::new(product::FindOneProductDto { id });
     let response = client.remove_product(request).await;
     match response {
-        Ok(res) => Ok(res.into_inner()),  // Extract the inner Empty type from the Response
-        Err(e) => Err(e),                // Propagate the error as is
+        Ok(res) => Ok(res.into_inner()), // Extract the inner Empty type from the Response
+        Err(e) => Err(e), // Propagate the error as is
     }
 }
 
 async fn get_paginated_products(
     client: &mut ProductServiceClient<Channel>,
     page_number: i32,
-    page_size: i32,
+    page_size: i32
 ) -> Result<Vec<Product>, tonic::Status> {
     let request = Request::new(product::PaginationDto { page_number, page_size });
     let response = client.get_paginated_products(request).await?;
@@ -117,18 +124,17 @@ async fn get_paginated_products(
 
 async fn search_products(
     client: &mut ProductServiceClient<Channel>,
-    query: SearchProductsRequest,
+    query: SearchProductsRequest
 ) -> Result<SearchProductsResponse, tonic::Status> {
     let request = Request::new(query);
     let response = client.search_products(request).await?;
     Ok(response.into_inner())
 }
 
-
 // Functions to handle the service functions
 async fn handle_create_product(
     dto: web::Json<CreateProductDto>,
-    client: web::Data<ProductServiceClient<Channel>>,
+    client: web::Data<ProductServiceClient<Channel>>
 ) -> impl Responder {
     match create_product(&mut client.get_ref().clone(), dto.into_inner()).await {
         Ok(response) => HttpResponse::Ok().json(response),
@@ -139,7 +145,7 @@ async fn handle_create_product(
 async fn handle_update_product(
     id: web::Path<String>,
     dto: web::Json<UpdateProductDto>,
-    client: web::Data<ProductServiceClient<Channel>>,
+    client: web::Data<ProductServiceClient<Channel>>
 ) -> impl Responder {
     let dto = UpdateProductDto {
         id: id.into_inner(),
@@ -152,54 +158,58 @@ async fn handle_update_product(
 }
 
 async fn handle_find_all_products(
-    client: web::Data<ProductServiceClient<Channel>>,
+    client: web::Data<ProductServiceClient<Channel>>
 ) -> impl Responder {
     match find_all_products(&mut client.get_ref().clone()).await {
         // Ok(response) => HttpResponse::Ok().json(response),
         Ok(response) => Ok(HttpResponse::Ok().json(response)),
-        Err(_) => Err(MyError::InternalServerError(
-            "Failed to find all products".to_string(),
-        )),
+        Err(_) => Err(MyError::InternalServerError("Failed to find all products".to_string())),
         // Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }
 
 async fn handle_find_one_product(
     id: web::Path<String>,
-    client: web::Data<ProductServiceClient<Channel>>,
+    client: web::Data<ProductServiceClient<Channel>>
 ) -> impl Responder {
     match find_one_product(&mut client.get_ref().clone(), id.into_inner()).await {
         // Ok(response) => HttpResponse::Ok().json(response),
         // Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
         Ok(response) => Ok(HttpResponse::Ok().json(response)),
-        Err(_) => Err(MyError::InternalServerError("Failed to find one product".to_string(),)),
+        Err(_) => Err(MyError::InternalServerError("Failed to find one product".to_string())),
     }
 }
 
 async fn handle_remove_product(
     id: web::Path<String>,
-    client: web::Data<ProductServiceClient<Channel>>,
+    client: web::Data<ProductServiceClient<Channel>>
 ) -> impl Responder {
     match remove_product(&mut client.get_ref().clone(), id.into_inner()).await {
         Ok(response) => Ok(HttpResponse::Ok().json(response)),
-        Err(_) => Err(MyError::InternalServerError("Failed to delete product".to_string(),)),
+        Err(_) => Err(MyError::InternalServerError("Failed to delete product".to_string())),
     }
 }
 
 async fn handle_get_paginated(
     page_number: web::Path<i32>,
     page_size: web::Path<i32>,
-    client: web::Data<ProductServiceClient<Channel>>,
+    client: web::Data<ProductServiceClient<Channel>>
 ) -> impl Responder {
-    match get_paginated_products(&mut client.get_ref().clone(), page_number.into_inner(), page_size.into_inner()).await {
+    match
+        get_paginated_products(
+            &mut client.get_ref().clone(),
+            page_number.into_inner(),
+            page_size.into_inner()
+        ).await
+    {
         Ok(response) => Ok(HttpResponse::Ok().json(response)),
-        Err(_) => Err(MyError::InternalServerError("Failed to get paginated products".to_string(),)),
+        Err(_) => Err(MyError::InternalServerError("Failed to get paginated products".to_string())),
     }
 }
 
 async fn handle_search_products(
     query: web::Query<SearchProductsRequest>,
-    client: web::Data<ProductServiceClient<Channel>>,
+    client: web::Data<ProductServiceClient<Channel>>
 ) -> impl Responder {
     match search_products(&mut client.get_ref().clone(), query.into_inner()).await {
         Ok(response) => Ok(HttpResponse::Ok().json(response)),
@@ -209,13 +219,15 @@ async fn handle_search_products(
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let port = env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    let addr: SocketAddr = format!("0.0.0.0:{}", port).parse()?;
+
     env::set_var("RUST_LOG", "debug");
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
-    // Connect to the serve
+    
     let cli = ClientCli::parse();
 
-    let client =
-        ProductServiceClient::connect(format!("http://{}:{}", cli.server, cli.port)).await?;
+    let client = ProductServiceClient::connect(format!("http://{}:{}", cli.server, cli.port)).await?;
 
     let server = HttpServer::new(move || {
         let client_data = web::Data::new(client.clone());
@@ -225,13 +237,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         App::new()
             .wrap(cors)
             .app_data(client_data)
-            .service(
-                web::resource("/search")
-                .route(web::get().to(handle_search_products))
-                // web::scope("/product")
-                //     .route("/search", web::get().to(handle_search_products))
-                //     .route("/search/{page_number}/{page_size}", web::get().to(handle_get_paginated)),
-            )
+            .service(web::resource("/search").route(web::get().to(handle_search_products)))
             .route("/product", web::post().to(handle_create_product))
             .route("/product/{id}", web::patch().to(handle_update_product))
             .route("/product", web::get().to(handle_find_all_products))
@@ -239,8 +245,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .route("/product/{id}", web::delete().to(handle_remove_product))
             .route("/product/{page_number}/{page_size}", web::get().to(handle_get_paginated))
     })
-    .bind("0.0.0.0:8082")?
+    .bind(addr)?
     .run()
     .await?;
+
     Ok(())
 }
